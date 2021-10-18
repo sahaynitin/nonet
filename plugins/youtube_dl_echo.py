@@ -152,16 +152,19 @@ async def echo(bot, update):
                     "video", format_id, format_ext)
                 cb_string_file = "{}|{}|{}".format(
                     "file", format_id, format_ext)
-                if format_string is not None and not "audio only" in format_string:
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "S " + format_string + " video " + approx_file_size + " ",
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "D " + format_ext + " " + approx_file_size + " ",
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
+                if format_string == 'audio':
+            buttons = InlineKeyboardMarkup([[InlineKeyboardButton(
+                "Audio", callback_data=f"{media_type}||{format_id}||{yturl}"), InlineKeyboardButton("Document",
+                                                                                                    callback_data=f"docaudio||{format_id}||{yturl}")]])
+        else:
+            buttons = InlineKeyboardMarkup([[InlineKeyboardButton(
+                "Video", callback_data=f"{media_type}||{format_id}||{yturl}"), InlineKeyboardButton("Document",
+                                                                                                    callback_data=f"docvideo||{format_id}||{yturl}")]])
+
+        await m.edit_message_reply_markup(buttons)
+
+    else:
+        raise ContinuePropagation
                     ]
                     """if duration is not None:
                         cb_string_video_message = "{}|{}|{}".format(
